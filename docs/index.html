@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aicswitch</title>
+<meta name="description" content="Make AIC8800 WiFi 6 / Bluetooth USB dongles (1111:1111 88M80) work on Linux with one command.">
+<meta property="og:title" content="aicswitch">
+<meta property="og:description" content="Make AIC8800 WiFi 6 / Bluetooth USB dongles work on Linux. One command.">
+<meta property="og:image" content="https://limitedio.github.io/aicswitch/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.png">
+<style>
+:root {
+  --bg: #ffffff; --fg: #0f172a; --muted: #475569; --card: #f1f5f9;
+  --line: #e2e8f0; --accent: #4f46e5; --code-bg: #0f172a; --code-fg: #e2e8f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0b1020; --fg: #e2e8f0; --muted: #94a3b8; --card: #151b2e;
+          --line: #1f2940; --accent: #818cf8; --code-bg: #05070f; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 820px; margin: 0 auto; padding: 0 16px 64px; }
+a { color: var(--accent); }
+header { display: flex; align-items: center; gap: 20px; padding: 56px 0 24px; }
+header img { width: 88px; height: 88px; flex: none; }
+h1 { margin: 0; font-size: 2.4rem; letter-spacing: -0.02em; }
+.tag { margin: 4px 0 0; color: var(--muted); font-size: 1.1rem; }
+h2 { margin: 48px 0 12px; font-size: 1.3rem; }
+pre { position: relative; margin: 0; padding: 16px 56px 16px 16px; overflow-x: auto;
+  background: var(--code-bg); color: var(--code-fg); border-radius: 10px; font-size: 14px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+p code, li code { background: var(--card); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+.copy { position: absolute; top: 10px; right: 10px; border: 1px solid #334155; background: #1e293b;
+  color: #e2e8f0; border-radius: 6px; padding: 4px 8px; font-size: 12px; cursor: pointer; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.card b { display: block; margin-bottom: 4px; }
+.card span { color: var(--muted); font-size: 0.95rem; }
+.steps { padding-left: 20px; } .steps li { margin: 6px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.btn { display: inline-block; padding: 9px 16px; border-radius: 8px; text-decoration: none;
+  border: 1px solid var(--line); color: var(--fg); background: var(--card); font-weight: 600; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="logo.svg" alt="aicswitch logo">
+    <div>
+      <h1>aicswitch</h1>
+      <p class="tag">Make AIC8800 WiFi 6 / Bluetooth USB dongles work on Linux.</p>
+    </div>
+  </header>
+
+  <p>Cheap WiFi 6 USB dongles built on the <b>AICSemi AIC8800D80</b> chip show up on Linux as a tiny
+  USB disk (<code>1111:1111 Pandora International Ltd. 88M80</code>) holding a Windows installer, instead of a
+  network card. <b>aicswitch</b> sends the dongle the same vendor command the Windows tool uses, so it turns
+  into a real WiFi + Bluetooth adapter. A udev rule does this automatically every time you plug it in.</p>
+
+  <div class="btns">
+    <a class="btn primary" href="#install">Install</a>
+    <a class="btn" href="https://github.com/LimitedIO/aicswitch">GitHub</a>
+    <a class="btn" href="https://github.com/LimitedIO/aicswitch/releases/latest">Downloads</a>
+  </div>
+
+  <h2 id="install">Install</h2>
+  <p>Switcher plus the WiFi/Bluetooth driver (recommended):</p>
+  <pre><code>curl -fsSL https://limitedio.github.io/aicswitch/install.sh | sudo sh -s -- --driver</code></pre>
+  <p>Only the switcher, if you already have an AIC8800 driver:</p>
+  <pre><code>curl -fsSL https://limitedio.github.io/aicswitch/install.sh | sudo sh</code></pre>
+  <p>Then unplug the dongle and plug it back in. To remove aicswitch, run the same command with <code>-s -- --uninstall</code>.</p>
+
+  <h2>Is this my dongle?</h2>
+  <pre><code>$ lsusb
+Bus 001 Device 120: ID 1111:1111 Pandora International Ltd. 88M80</code></pre>
+  <p>After switching, it shows up as <code>a69c:8d80 aicsemi AIC Wlan</code>, and as
+  <code>a69c:8d81 AICSemi AIC 8800D80</code> once the driver has loaded its firmware.</p>
+
+  <h2>Packages</h2>
+  <div class="grid">
+    <div class="card"><b>Debian / Ubuntu</b><span><code>.deb</code>, then <code>sudo apt install ./aicswitch_*.deb</code></span></div>
+    <div class="card"><b>Fedora / openSUSE</b><span><code>.rpm</code>, then <code>sudo dnf install ./aicswitch-*.rpm</code></span></div>
+    <div class="card"><b>Arch Linux</b><span><code>.pkg.tar.zst</code>, then <code>sudo pacman -U aicswitch-*.pkg.tar.zst</code></span></div>
+    <div class="card"><b>Alpine</b><span><code>.apk</code>, then <code>sudo apk add --allow-untrusted aicswitch_*.apk</code></span></div>
+    <div class="card"><b>Any distro</b><span>Static <code>tar.gz</code> for x86_64, i686, aarch64, armv7, armv6, riscv64, ppc64le</span></div>
+    <div class="card"><b>From source</b><span><code>make &amp;&amp; sudo make install</code>, using only a C compiler and libc</span></div>
+  </div>
+  <p><a href="https://github.com/LimitedIO/aicswitch/releases/latest">All downloads →</a></p>
+
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li>The dongle starts in "driver CD" mode as a USB mass-storage device.</li>
+    <li>udev sees the <code>1111:1111</code> SCSI device and runs <code>aicswitch /dev/sgN</code>.</li>
+    <li>aicswitch sends the vendor SCSI command <code>FD 00 … 00 F2</code> through <code>SG_IO</code>.
+        This command was found by disassembling <code>Usb_Driver.dll</code> from the dongle's own Windows installer.</li>
+    <li>The dongle reconnects as <code>a69c:8d80</code>, and the AIC8800 driver loads its firmware.</li>
+  </ol>
+
+  <footer>
+    MIT licensed · The WiFi/Bluetooth driver installed with <code>--driver</code> is
+    <a href="https://github.com/shenmintao/aic8800d80">shenmintao/aic8800d80</a> (GPL) ·
+    <a href="https://github.com/LimitedIO/aicswitch">LimitedIO/aicswitch</a>
+  </footer>
+</main>
+<script>
+document.querySelectorAll('pre').forEach(function (pre) {
+  var b = document.createElement('button');
+  b.className = 'copy'; b.textContent = 'Copy';
+  b.onclick = function () {
+    var t = pre.querySelector('code').innerText.replace(/^\$ /gm, '');
+    navigator.clipboard.writeText(t).then(function () {
+      b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+    });
+  };
+  pre.appendChild(b);
+});
+</script>
+</body>
+</html>

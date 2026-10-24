@@ -1,0 +1,24 @@
+name: aicswitch
+arch: ${PKG_ARCH}
+platform: linux
+version: ${VERSION}
+section: utils
+priority: optional
+maintainer: LimitedIO <160145221+LimitedIO@users.noreply.github.com>
+description: |
+  Switch AIC8800 WiFi 6 / Bluetooth USB dongles (1111:1111 "88M80")
+  out of their fake driver-CD mode so Linux can use them.
+vendor: LimitedIO
+homepage: https://limitedio.github.io/aicswitch/
+license: MIT
+contents:
+  - src: ./build/aicswitch
+    dst: /usr/sbin/aicswitch
+    file_info: { mode: 0755 }
+  - src: ./build/99-aicswitch.rules
+    dst: /usr/lib/udev/rules.d/99-aicswitch.rules
+  - src: ./LICENSE
+    dst: /usr/share/licenses/aicswitch/LICENSE
+scripts:
+  postinstall: ./packaging/postinst.sh
+  postremove: ./packaging/postinst.sh

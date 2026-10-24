@@ -1,0 +1,5 @@
+aicswitch
+99-aicswitch.rules
+build/
+dist/
+vendor/

@@ -1,0 +1,2 @@
+# aicswitch: switch AIC8800 dongles out of driver-CD mode on plug-in
+ACTION=="add", SUBSYSTEM=="scsi_generic", ATTRS{idVendor}=="1111", ATTRS{idProduct}=="1111", RUN+="@SBINDIR@/aicswitch /dev/%k"

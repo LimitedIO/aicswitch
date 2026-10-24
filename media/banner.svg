@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#g)"/>
+  <svg x="120" y="192" width="256" height="256" viewBox="0 0 256 256">  <defs>
+    <linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#lbg)"/>
+  <!-- USB plug body -->
+  <rect x="100" y="150" width="56" height="62" rx="8" fill="#fff"/>
+  <rect x="112" y="162" width="10" height="14" rx="2" fill="#4f46e5"/>
+  <rect x="134" y="162" width="10" height="14" rx="2" fill="#4f46e5"/>
+  <!-- WiFi waves rising out of the plug -->
+  <g fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round">
+    <path d="M60 104a96 96 0 0 1 136 0"/>
+    <path d="M86 128a58 58 0 0 1 84 0"/>
+  </g></svg>
+  <text x="430" y="300" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="96" font-weight="700" fill="#fff">aicswitch</text>
+  <text x="434" y="370" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="32" fill="#c7d2fe">Make AIC8800 WiFi 6 / Bluetooth USB dongles</text>
+  <text x="434" y="418" font-family="DejaVu Sans, Helvetica, Arial, sans-serif" font-size="32" fill="#c7d2fe">work on Linux. One command.</text>
+  <text x="434" y="490" font-family="DejaVu Sans Mono, monospace" font-size="24" fill="#94a3b8">1111:1111 "88M80"  →  a69c:8d80 AIC Wlan</text>
+</svg>

@@ -1,0 +1,12 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: make CFLAGS="-O2 -Wall -Wextra -Werror"
+      - run: ./aicswitch --version
+      - run: shellcheck install.sh packaging/postinst.sh
