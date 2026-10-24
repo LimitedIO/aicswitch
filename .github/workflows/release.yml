@@ -15,7 +15,7 @@ jobs:
           - { arch: x86_64,  pkg: amd64,   cc: gcc,                         apt: gcc,                          qemu: '' }
           - { arch: i686,    pkg: '386',   cc: i686-linux-gnu-gcc,          apt: gcc-i686-linux-gnu,           qemu: qemu-i386-static }
           - { arch: aarch64, pkg: arm64,   cc: aarch64-linux-gnu-gcc,       apt: gcc-aarch64-linux-gnu,        qemu: qemu-aarch64-static }
-          - { arch: armv7,   pkg: arm7,    cc: arm-linux-gnueabihf-gcc,     apt: gcc-arm-linux-gnueabihf,      qemu: qemu-arm-static }
+          - { arch: armv7,   pkg: arm7,    cc: arm-linux-gnueabihf-gcc,     apt: gcc-arm-linux-gnueabihf,      qemu: qemu-arm-static, formats: 'rpm apk archlinux' }
           - { arch: armv6,   pkg: arm6,    cc: arm-linux-gnueabi-gcc,       apt: gcc-arm-linux-gnueabi,        qemu: qemu-arm-static }
           - { arch: riscv64, pkg: riscv64, cc: riscv64-linux-gnu-gcc,       apt: gcc-riscv64-linux-gnu,        qemu: qemu-riscv64-static }
           - { arch: ppc64le, pkg: ppc64le, cc: powerpc64le-linux-gnu-gcc,   apt: gcc-powerpc64le-linux-gnu,    qemu: qemu-ppc64le-static }
@@ -38,7 +38,7 @@ jobs:
         run: |
           export VERSION=${GITHUB_REF_NAME#v} PKG_ARCH=${{ matrix.pkg }}
           tar -czf dist/aicswitch-linux-${{ matrix.arch }}.tar.gz aicswitch 99-aicswitch.rules.in LICENSE README.md
-          for f in deb rpm apk archlinux; do nfpm package -f packaging/nfpm.yaml -p $f -t dist/; done
+          for f in ${{ matrix.formats || 'deb rpm apk archlinux' }}; do nfpm package -f packaging/nfpm.yaml -p $f -t dist/; done
           ls -l dist
       - uses: actions/upload-artifact@v4
         with: { name: 'dist-${{ matrix.arch }}', path: 'dist/*' }
@@ -49,6 +49,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: dist, merge-multiple: true }
-      - run: cp install.sh dist/ && cd dist && sha256sum * > SHA256SUMS
+      - run: cp install.sh dist/ && cd dist && sha256sum * > SHA256SUMS && ls | wc -l
       - run: gh release create "$GITHUB_REF_NAME" dist/* --title "aicswitch $GITHUB_REF_NAME" --generate-notes
         env: { GH_TOKEN: '${{ github.token }}' }
