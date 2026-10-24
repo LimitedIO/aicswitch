@@ -41,7 +41,7 @@ jobs:
           for f in deb rpm apk archlinux; do nfpm package -f packaging/nfpm.yaml -p $f -t dist/; done
           ls -l dist
       - uses: actions/upload-artifact@v4
-        with: { name: dist-${{ matrix.arch }}, path: dist/* }
+        with: { name: 'dist-${{ matrix.arch }}', path: 'dist/*' }
   release:
     needs: build
     runs-on: ubuntu-24.04

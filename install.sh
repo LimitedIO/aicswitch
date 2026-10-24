@@ -22,7 +22,7 @@ fetch() {
 
 uninstall() {
 	rm -f "$BIN" "$RULE"
-	command -v udevadm >/dev/null && udevadm control --reload || true
+	if command -v udevadm >/dev/null; then udevadm control --reload; fi
 	say "aicswitch removed"
 }
 
@@ -78,7 +78,8 @@ done
 
 [ "$(id -u)" = 0 ] || die "run as root (pipe into 'sudo sh')"
 install_tool
-[ "$driver" = 1 ] && install_driver
-lsmod 2>/dev/null | grep -q aic8800_fdrv || [ "$driver" = 1 ] ||
+if [ "$driver" = 1 ]; then install_driver; fi
+if [ "$driver" = 0 ] && ! grep -q '^aic8800_fdrv ' /proc/modules 2>/dev/null; then
 	say "No AIC8800 driver loaded. Re-run with: sh -s -- --driver"
+fi
 say "Done. Unplug and replug your dongle."
