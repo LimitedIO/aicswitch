@@ -18,6 +18,17 @@ Bus 001 Device 120: ID 1111:1111 Pandora International Ltd. 88M80
 **aicswitch** sends the dongle the same vendor command the Windows tool uses, so it turns into a
 real WiFi + Bluetooth adapter. A udev rule does this automatically every time you plug it in.
 
+## Symptoms
+
+Your dongle needs aicswitch if any of these apply:
+
+- `lsusb` shows `ID 1111:1111 Pandora International Ltd. 88M80`
+- A small USB drive called **"Wifi Driver"** containing `Wifi6_install.exe` appears when you plug it in
+- `dmesg` shows `scsi ... Direct-Access LGX WIFI6` and `usb-storage`, but no network interface
+- `eject` and `usb_modeswitch` don't make the WiFi adapter appear
+
+Tested with the **AICSemi AIC8800D80** chip (WiFi 6 + Bluetooth 5) sold under brands like LGX and in no-name "WiFi 6 USB adapter" sticks.
+
 ## Install
 
 Switcher plus the WiFi/Bluetooth driver (recommended):

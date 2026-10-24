@@ -3,13 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>aicswitch</title>
-<meta name="description" content="Make AIC8800 WiFi 6 / Bluetooth USB dongles (1111:1111 88M80) work on Linux with one command.">
-<meta property="og:title" content="aicswitch">
-<meta property="og:description" content="Make AIC8800 WiFi 6 / Bluetooth USB dongles work on Linux. One command.">
+<title>aicswitch: AIC8800 WiFi 6 USB adapter on Linux (1111:1111 88M80 fix)</title>
+<meta name="description" content="Fix AIC8800 / AIC8800D80 WiFi 6 USB dongles on Linux that show up as 1111:1111 Pandora International Ltd. 88M80 mass storage. One command installs the mode switch and the WiFi/Bluetooth driver.">
+<meta name="keywords" content="AIC8800, AIC8800D80, 1111:1111, Pandora International 88M80, LGX WIFI6, USB WiFi 6 Linux, aic8800 driver, usb_modeswitch, a69c:8d80, Ubuntu, Raspberry Pi">
+<meta name="robots" content="index, follow">
+<meta name="author" content="LimitedIO">
+<meta name="theme-color" content="#264653">
+<link rel="canonical" href="https://limitedio.github.io/aicswitch/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="aicswitch">
+<meta property="og:url" content="https://limitedio.github.io/aicswitch/">
+<meta property="og:title" content="aicswitch: make AIC8800 WiFi 6 USB dongles work on Linux">
+<meta property="og:description" content="Your USB WiFi adapter shows up as 1111:1111 Pandora International Ltd. 88M80? One command fixes it.">
 <meta property="og:image" content="https://limitedio.github.io/aicswitch/banner.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="aicswitch: make AIC8800 WiFi 6 / Bluetooth USB dongles work on Linux">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.png">
+<meta name="twitter:title" content="aicswitch: make AIC8800 WiFi 6 USB dongles work on Linux">
+<meta name="twitter:description" content="USB WiFi shows as 1111:1111 88M80 mass storage? One command fixes it.">
+<meta name="twitter:image" content="https://limitedio.github.io/aicswitch/banner.png">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "aicswitch", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Linux", "description": "Switches AIC8800 / AIC8800D80 WiFi 6 and Bluetooth USB dongles (1111:1111 \"88M80\") out of driver-CD mode so they work on Linux.", "url": "https://limitedio.github.io/aicswitch/", "image": "https://limitedio.github.io/aicswitch/banner.png", "downloadUrl": "https://github.com/LimitedIO/aicswitch/releases/latest", "softwareVersion": "1.0.1", "license": "https://opensource.org/licenses/MIT", "codeRepository": "https://github.com/LimitedIO/aicswitch", "author": {"@type": "Organization", "name": "LimitedIO", "url": "https://github.com/LimitedIO"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my USB WiFi adapter show up as 1111:1111 Pandora International Ltd. 88M80?", "acceptedAnswer": {"@type": "Answer", "text": "The dongle uses an AICSemi AIC8800D80 chip and starts in a fake driver-CD mode, a small USB disk labelled \"Wifi Driver\" that holds a Windows installer. Linux sees mass storage, not a network card, until the dongle is told to switch."}}, {"@type": "Question", "name": "Why doesn't eject or usb_modeswitch fix it?", "acceptedAnswer": {"@type": "Answer", "text": "These units ignore the standard SCSI eject. They only switch on the vendor command FD 00 … 00 F2, which aicswitch sends. A plain eject just removes the virtual media until you replug."}}, {"@type": "Question", "name": "Which Linux driver does the AIC8800D80 need?", "acceptedAnswer": {"@type": "Answer", "text": "After switching, the dongle appears as a69c:8d80 and needs the out-of-tree AIC8800 driver plus firmware. The installer's --driver option builds shenmintao/aic8800d80 with DKMS, so it keeps working after kernel updates."}}, {"@type": "Question", "name": "Does it work on Raspberry Pi, Ubuntu, Debian, Fedora and Arch?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. aicswitch ships static binaries and deb, rpm, apk and Arch packages for x86_64, i686, aarch64, armv7, armv6, riscv64 and ppc64le."}}, {"@type": "Question", "name": "Does Bluetooth work too?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. With the AIC8800 driver loaded, the dongle provides both a WiFi interface (wlx…) and a Bluetooth controller (hci)."}}]}]</script>
 <style>
 :root {
   --bg: #f2e8cf; --fg: #264653; --muted: #4f6b75; --card: #fbf6ea;
@@ -46,16 +63,19 @@ p code, li code { background: var(--card); padding: 1px 6px; border-radius: 4px;
 .btn { display: inline-block; padding: 9px 16px; border-radius: 8px; text-decoration: none;
   border: 1px solid var(--line); color: var(--fg); background: var(--card); font-weight: 600; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin: 8px 0; }
+summary { cursor: pointer; font-weight: 600; }
+details p { margin: 8px 0 0; color: var(--muted); }
 footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <img src="logo.svg" alt="aicswitch logo">
+<main id="top">
+  <header role="banner">
+    <img src="logo.svg" alt="aicswitch pixel logo: WiFi waves above a USB plug" width="88" height="88">
     <div>
       <h1>aicswitch</h1>
-      <p class="tag">Make AIC8800 WiFi 6 / Bluetooth USB dongles work on Linux.</p>
+      <p class="tag">Make AIC8800 / AIC8800D80 WiFi 6 and Bluetooth USB dongles work on Linux.</p>
     </div>
   </header>
 
@@ -102,6 +122,28 @@ Bus 001 Device 120: ID 1111:1111 Pandora International Ltd. 88M80</code></pre>
         This command was found by disassembling <code>Usb_Driver.dll</code> from the dongle's own Windows installer.</li>
     <li>The dongle reconnects as <code>a69c:8d80</code>, and the AIC8800 driver loads its firmware.</li>
   </ol>
+
+  <h2 id="faq">FAQ</h2>
+  <details>
+    <summary>Why does my USB WiFi adapter show up as 1111:1111 Pandora International Ltd. 88M80?</summary>
+    <p>The dongle uses an AICSemi AIC8800D80 chip and starts in a fake driver-CD mode, a small USB disk labelled &quot;Wifi Driver&quot; that holds a Windows installer. Linux sees mass storage, not a network card, until the dongle is told to switch.</p>
+  </details>
+  <details>
+    <summary>Why doesn&#x27;t eject or usb_modeswitch fix it?</summary>
+    <p>These units ignore the standard SCSI eject. They only switch on the vendor command FD 00 … 00 F2, which aicswitch sends. A plain eject just removes the virtual media until you replug.</p>
+  </details>
+  <details>
+    <summary>Which Linux driver does the AIC8800D80 need?</summary>
+    <p>After switching, the dongle appears as a69c:8d80 and needs the out-of-tree AIC8800 driver plus firmware. The installer&#x27;s --driver option builds shenmintao/aic8800d80 with DKMS, so it keeps working after kernel updates.</p>
+  </details>
+  <details>
+    <summary>Does it work on Raspberry Pi, Ubuntu, Debian, Fedora and Arch?</summary>
+    <p>Yes. aicswitch ships static binaries and deb, rpm, apk and Arch packages for x86_64, i686, aarch64, armv7, armv6, riscv64 and ppc64le.</p>
+  </details>
+  <details>
+    <summary>Does Bluetooth work too?</summary>
+    <p>Yes. With the AIC8800 driver loaded, the dongle provides both a WiFi interface (wlx…) and a Bluetooth controller (hci).</p>
+  </details>
 
   <footer>
     MIT licensed · The WiFi/Bluetooth driver installed with <code>--driver</code> is
