@@ -95,7 +95,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
   <pre><code>curl -fsSL https://limitedio.github.io/aicswitch/install.sh | sudo sh -s -- --driver</code></pre>
   <p>Only the switcher, if you already have an AIC8800 driver:</p>
   <pre><code>curl -fsSL https://limitedio.github.io/aicswitch/install.sh | sudo sh</code></pre>
-  <p>Then unplug the dongle and plug it back in. To remove aicswitch, run the same command with <code>-s -- --uninstall</code>.</p>
+  <p>Then unplug the dongle and plug it back in. To remove aicswitch, run <code>curl -fsSL https://limitedio.github.io/aicswitch/uninstall.sh | sudo sh</code> (add <code>-s -- --driver</code> to also remove the driver).</p>
 
   <h2>Is this my dongle?</h2>
   <pre><code>$ lsusb

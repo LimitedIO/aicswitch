@@ -13,7 +13,7 @@ jobs:
     environment: { name: github-pages, url: '${{ steps.deploy.outputs.page_url }}' }
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p _site && cp -r docs/* _site/ && cp install.sh media/logo.svg media/banner.png _site/
+      - run: mkdir -p _site && cp -r docs/* _site/ && cp install.sh uninstall.sh media/logo.svg media/banner.png _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
       - id: deploy

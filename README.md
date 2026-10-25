@@ -43,7 +43,7 @@ Only the switcher, if you already have an AIC8800 driver:
 curl -fsSL https://limitedio.github.io/aicswitch/install.sh | sudo sh
 ```
 
-Then unplug the dongle and plug it back in. To remove aicswitch, run the same command with `-s -- --uninstall`.
+Then unplug the dongle and plug it back in. To remove aicswitch, run `curl -fsSL https://limitedio.github.io/aicswitch/uninstall.sh | sudo sh` (add `-s -- --driver` to also remove the driver).
 
 ### Packages
 

@@ -18,6 +18,9 @@ contents:
   - src: ./build/99-aicswitch.rules
     dst: /usr/lib/udev/rules.d/99-aicswitch.rules
     file_info: { mode: 0644 }
+  - src: ./packaging/aicswitch-modules.conf
+    dst: /usr/lib/modules-load.d/aicswitch.conf
+    file_info: { mode: 0644 }
   - src: ./LICENSE
     dst: /usr/share/licenses/aicswitch/LICENSE
     file_info: { mode: 0644 }
