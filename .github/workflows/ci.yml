@@ -9,4 +9,4 @@ jobs:
       - uses: actions/checkout@v4
       - run: make CFLAGS="-O2 -Wall -Wextra -Werror"
       - run: ./aicswitch --version
-      - run: shellcheck install.sh packaging/postinst.sh
+      - run: shellcheck install.sh uninstall.sh packaging/postinst.sh

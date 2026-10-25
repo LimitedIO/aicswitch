@@ -70,7 +70,7 @@ install_tool() {
 	else
 		warn "/etc/modules-load.d missing; make sure the 'sg' module loads at boot"
 	fi
-	modprobe sg 2>/dev/null && sub "loaded 'sg' module now" || sub "'sg' already built in or unavailable"
+	if modprobe sg 2>/dev/null; then sub "loaded 'sg' module now"; else sub "'sg' already built in or unavailable"; fi
 	if command -v udevadm >/dev/null; then
 		udevadm control --reload
 		sub "reloaded udev rules"
